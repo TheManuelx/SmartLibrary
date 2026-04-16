@@ -15,8 +15,11 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('quantity')->default('0');
+            $table->string('cover_image')->nullable();
+            $table->string('title');
+            $table->year('published_year');
+            $table->string('category');
+            $table->enum('status', ['available', 'borrowed'])->default('available');
             $table->timestamps();
         });
     }
@@ -26,7 +29,7 @@ class CreateBooksTable extends Migration
      *
      * @return void
      */
-    public function down(): viod
+    public function down(): void
     {
         Schema::dropIfExists('books');
     }

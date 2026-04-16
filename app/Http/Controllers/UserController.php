@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Book;
 
 class UserController extends Controller
 {
@@ -14,7 +16,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        //Total Number of the Books
+        $totalBooks = Book::count();
+
+        //Total Number of Borrowed Books
+        $borrowedBooks = Book::where('status', 'borrowed')->count();
+
+        $totalUsers = User::count();
+
+        return view('users.dashboard', compact('totalBooks', 'borrowedBooks', 'totalUsers'));
     }
 
     /**
@@ -46,7 +56,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**

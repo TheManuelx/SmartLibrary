@@ -24,6 +24,13 @@ Route::post('login', [UserController::class, 'loginValidate'])->name('validate')
 Route::get('profile', function() {
     return view('users.profile');
 })->name('profile');
-Route::get('dashboard', function() {
-    return view('users.dashboard');
-})->name('dashboard');
+Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+Route::get('managebooks', function(){
+    return view('users.managebooks');
+})->name('managebooks');
+Route::get('managecategories', function(){
+    return view('users.managecategories');
+})->name('managecategories');
+Route::get('borroweditems', function(){
+    return view('users.borroweditems');
+})->name('borroweditems');
