@@ -166,11 +166,13 @@ class UserController extends Controller
     }
     public function searchCategory(Request $request)
     {
+        $categoryName = $request->category ?? 'All';
         $query = Book::query();
-        if ($request->has('category') && $request->category != 'All') {
-            $query->where('category', $request->category);
+        if ($categoryName != 'All') {
+            $query->where('category', $categoryName);
         }
         $book = $query->get();
-        return view('books.searchcategory', compact('book'));
+        $count = $book->count();
+        return view('books.searchcategory', compact('book', 'categoryName', 'count'));
     }
 }

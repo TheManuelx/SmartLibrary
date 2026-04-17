@@ -30,20 +30,20 @@
 @endsection
 @section('content')
 <div class="table-container">
-    <h1>Manage Books</h1>
+    <h1>Category : {{ $categoryName }} {{ $count }}</h1>
     <table>
         <tr><th>Cover_Image</th><th>Title</th><th>Published_Year</th><th>Category</th><th>Status</th><th>Details</th><th>Edit</th><th>Delete</th></tr>
-        @foreach($book as $book)
+        @foreach($book as $item)
             <tr>
-                <td><img src="{{ asset('image/' . $book->cover_image) }}" width="50"></td>
-                <td>{{ $book->title }}</td>
-                <td>{{ $book->published_year }}</td>
-                <td>{{ $book->category }}</td>
-                <td>{{ $book->status }}</td>
-                <td><a href="{{ route('detail', $book->id) }}">Detail</a></td>
-                <td><a href="{{ route('edit', $book->id) }}">Edit</a></td>
+                <td><img src="{{ asset('image/' . $item->cover_image) }}" width="50"></td>
+                <td>{{ $item->title }}</td>
+                <td>{{ $item->published_year }}</td>
+                <td>{{ $item->category }}</td>
+                <td>{{ $item->status }}</td>
+                <td><a href="{{ route('detail', $item->id) }}">Detail</a></td>
+                <td><a href="{{ route('edit', $item->id) }}">Edit</a></td>
                 <td>
-                    <form action="{{ route('delete', $book->id) }}" method="POST" onsubmit="return confirm('Confirming to Delete?')">
+                    <form action="{{ route('delete', $item->id) }}" method="POST" onsubmit="return confirm('Confirming to Delete?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
