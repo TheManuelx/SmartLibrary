@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html>
-    <head>
+@extends('layouts.master')
+        @section('style')
         <style>
             body {
                 height: 100%;
@@ -35,11 +34,10 @@
                 color: white;
             }
         </style>
-    </head>
-    <body>
+        @endsection
+        @section('content')
         <div><h1>DashBoard</h1></div>
         <nav class="sidebar">
-            <img src="{{ asset('image/SmartLibrary.jpg') }}" width="180px">
             <a href="{{ route('managebooks') }}">Manage Books</a>
             <a href="{{ route('managecategories') }}">Manage Categories</a>
             <a href="{{ route('borroweditems') }}">Borrowed Items</a>
@@ -51,5 +49,4 @@
                 <div>Number of Users : {{ $totalUsers }}</div>
             </p>
         </div>
-    </body>
-</html>
+        @endsection
