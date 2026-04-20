@@ -51,3 +51,5 @@ Route::delete('books/delete/{id}', [UserController::class, 'destroy'])->name('de
 Route::get('searchbook', [UserController::class, 'searchBook'])->name('searchbook');
 //SearchCategory
 Route::get('searchcategory', [UserController::class, 'searchCategory'])->name('searchcategory');
+//AddCategory
+Route::post('books/addcategory', [UserController::class, 'addCategory'])->name('addcategory');

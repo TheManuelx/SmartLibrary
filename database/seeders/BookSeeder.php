@@ -15,49 +15,36 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        $categoryData = [
-            'Technology' => 'book1.png',
-            'Education' => 'book2.png',
-            'Novel' => 'book3.png',
-            'Science' => 'book4.png',
-            'History' => 'book5.png',
-        ];
-        $statuses = ['available', 'borrowed'];
-        $books = [];
+        $categories = ['Technology', 'Education', 'Novel', 'Science', 'History'];
+    $categoryIds = [];
 
-        for ($i=1; $i<=30; $i++)
-            {
-                $categoryName = array_rand($categoryData);
-                $imageName = $categoryData[$categoryName];
-                $books[] = [
-                    'cover_image' => $imageName,
-                    'title' => "$categoryName Learning Guide $i",
-                    'published_year' => rand(2018,2024),
-                    'category' => $categoryName,
-                    'status' => $statuses[array_rand($statuses)],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-        
+    // 1. สร้างหมวดหมู่และเก็บ ID ไว้
+    foreach ($categories as $name) {
+        $cat = \App\Models\Category::create(['name' => $name]);
+        $categoryIds[$name] = $cat->id;
+    }
+
+    $categoryImages = [
+        'Technology' => 'book1.png',
+        'Education' => 'book2.png',
+        'Novel' => 'book3.png',
+        'Science' => 'book4.png',
+        'History' => 'book5.png',
+    ];
+
+    $books = [];
+    for ($i=1; $i<=30; $i++) {
+        $categoryName = array_rand($categoryImages);
         $books[] = [
-                'cover_image' => 'book1.png',
-                'title' => 'Learn Laravel',
-                'published_year' => 2024,
-                'category' => 'Technology',
-                'status' => 'available',
-                'created_at' => now(),
-                'updated_at' => now(),
+            'cover_image' => $categoryImages[$categoryName],
+            'title' => "$categoryName Learning Guide $i",
+            'published_year' => rand(2018, 2024),
+            'category_id' => $categoryIds[$categoryName], // ใช้ ID แทนชื่อ
+            'status' => ['available', 'borrowed'][rand(0, 1)],
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
-        $books[] = [
-                'cover_image' => 'book2.png',
-                'title' => 'Basic PHP Programming',
-                'published_year' => 2023,
-                'category' => 'Education',
-                'status' => 'borrowed',
-                'created_at' => now(),
-                'updated_at' => now(),
-        ];
-        DB::table('books')->insert($books);
+    }
+    DB::table('books')->insert($books);
     }
 }

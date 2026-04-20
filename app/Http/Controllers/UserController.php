@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Book;
+use App\Models\Category;
 
 class UserController extends Controller
 {
@@ -48,7 +49,7 @@ class UserController extends Controller
         $request->validate([
             'title' => 'required',
             'published_year' => 'required|numeric',
-            'category' => 'required',
+            'category_id' => 'required',
             'status' => 'required',
             'cover_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
@@ -59,7 +60,7 @@ class UserController extends Controller
         Book::create([
             'title' => $request->title,
             'published_year' => $request->published_year,
-            'category' => $request->category,
+            'category_id' => $request->category_id,
             'status' => $request->status,
             'cover_image' => $imageName,
         ]);
@@ -88,7 +89,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $book = Book::findOrFail($id);
-        return view('users.edit', compact('book'));
+        $allCategories = Category::all();
+        return view('users.edit', compact('book', 'allCategories'));
     }
 
     /**
@@ -102,15 +104,34 @@ class UserController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'category' => 'required',
+            'category_id' => 'required',
             'status' => 'required',
+            'cover_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2024',
         ]);
+
         $book = Book::findOrFail($id);
-        $book->update([
+
+        $updateData = [
             'title' => $request->title,
-            'category' => $request->category,
+            'category_id' => $request->category_id,
             'status' => $request->status,
-        ]);
+        ];
+
+        if ($request->hasFile('cover_image')) {
+            if ($book->cover_image && file_exists(public_path('image/' . $book->cover_image))) {
+                unlink(public_path('image/' . $book->cover_image));
+            }
+
+            $imageName = time() . '.' . $request->cover_image->extension();
+            $request->cover_image->move(public_path('image'), $imageName);
+            
+            // เพิ่มชื่อรูปใหม่เข้าไปในข้อมูลที่จะอัปเดต
+            $updateData['cover_image'] = $imageName;
+        }
+
+        // 3. อัปเดตข้อมูลทั้งหมด
+        $book->update($updateData);
+        
         return redirect()->route('managebooks')->with('success', 'Book Updated Successfully');
     }
 
@@ -157,8 +178,10 @@ class UserController extends Controller
         if ($request->has('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
-        if ($request->has('category') && $request->category != 'All'){
-            $query->where('category', $request->category);
+        if ($request->filled('category') && $request->category != 'All') {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('name', $request->category());
+            });
         }
 
         $book = $query->get();
@@ -169,10 +192,24 @@ class UserController extends Controller
         $categoryName = $request->category ?? 'All';
         $query = Book::query();
         if ($categoryName != 'All') {
-            $query->where('category', $categoryName);
+            $query->whereHas('category', function($q) use ($categoryName) {
+                $q->where('name', $categoryName);
+            });
         }
         $book = $query->get();
         $count = $book->count();
         return view('books.searchcategory', compact('book', 'categoryName', 'count'));
+    }
+
+    public function addCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|unique:categories,name|max:255',
+        ]);
+        Category::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back()->with('Success', 'Add Category Successfully');
     }
 }

@@ -13,12 +13,13 @@ class CreateBooksTable extends Migration
      */
     public function up(): void
     {
+
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('cover_image')->nullable();
             $table->string('title');
             $table->year('published_year');
-            $table->string('category');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->enum('status', ['available', 'borrowed'])->default('available');
             $table->timestamps();
         });

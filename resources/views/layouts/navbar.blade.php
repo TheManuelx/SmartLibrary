@@ -13,29 +13,39 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- 1. Search Box (Left) -->
             <form class="d-flex mx-auto" action="{{ route('searchbook') }}" method="GET">
-                <input class="form-control me-2" type="search" name="search" placeholder="ค้นหาหนังสือ..." aria-label="Search">
+                <input class="form-control me-2" type="search" name="search" placeholder="Search for Books..." aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
+            <!-- 2. Add Category -->
+            <form class="d-flex mx-auto" action="{{ route('addcategory') }}" method="POST">
+                @csrf
+                <input class="form-control me-2" type="search" name="name" placeholder="Add a Category..." aria-label="Add">
+                <button class="btn btn-outline-success" type="submit">Add</button>
+            </form>
+
+
             <ul class="navbar-nav ms-auto">
-                <!-- 2. Dropdown Select Categories -->
+                <!-- 3. Dropdown Select Categories -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{{ route('searchcategory', ['category' => 'category']) }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Categories</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Categories</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'Technology']) }}">Technology</a></li>
-                        <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'Education']) }}">Education</a></li>
-                        <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'Novel']) }}">Novel</a></li>
-                        <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'Science']) }}">Science</a></li>
-                        <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'History']) }}">History</a></li>
+                        @foreach($allCategories as $cat)
+                            <li>
+                                <a class="dropdown-item" href="{{ route('searchcategory', ['category' => $cat->name]) }}">{{ $cat->name }}</a>
+                            </li>
+                        @endforeach
+                        
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'All']) }}">All</a></li>
                     </ul>
                 </li>
 
-                <!-- 3. Add New Book Button (Right) -->
+                <!-- 4. Add New Book Button (Right) -->
                 <li class="nav-item">
-                    <a class="btn btn-primary ms-2" href="{{ route('books.create') }}">+ Add Book</a>
+                    <a class="btn btn-primary ms-2" href="{{ route('books.create') }}">Add Book</a>
                 </li>
+
             </ul>
         </div>
     </div>

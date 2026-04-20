@@ -38,7 +38,7 @@
                         <td><img src="{{ asset('image/' . $book->cover_image) }}" width="50"></td>
                         <td>{{ $book->title }}</td>
                         <td>{{ $book->published_year }}</td>
-                        <td>{{ $book->category }}</td>
+                        <td>{{ $book->category->name }}</td>
                         <td>{{ $book->status }}</td>
                         <td><a href="{{ route('detail', $book->id) }}">Detail</a></td>
                         <td><a href="{{ route('edit', $book->id) }}">Edit</a></td>

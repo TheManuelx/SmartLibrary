@@ -23,7 +23,7 @@
 @endsection
 @section('content')
         <h1>Edit Book : {{ $book->title }}</h1>
-        <form action="{{ route('update', $book->id) }}" method="POST">
+        <form action="{{ route('update', $book->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -32,7 +32,11 @@
             </div>
             <div class="form-group">
                 <label>Category : </label>
-                <input type="text" name="category" value="{{ $book->category }}">
+                <select name="category_id">
+                    @foreach($allCategories as $cat)
+                        <option value="{{ $cat->id }}" {{ $book->category_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <label>Status : </label>
@@ -40,6 +44,13 @@
                     <option value="available" {{ $book->status == 'available' ? 'selected' : ''}}>Available</option>
                     <option value="borrowed" {{ $book->status == 'borrowed' ? 'selected' : ''}}>Borrowed</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label>Current Image : </label>
+                <img src="{{ asset('image/' . $book->cover_image) }}" width="100" class="mb-2"><br>
+                <label>Change Cover Image : </label>
+                <input type="file" name="cover_image" accept="image/*">
+                <small class="text-muted">Leave Blank to Keep Current Image</small>
             </div>
             <button type="submit">Update Book</button>
         </form>

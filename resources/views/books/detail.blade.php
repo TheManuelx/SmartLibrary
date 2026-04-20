@@ -33,7 +33,7 @@
             <div><img src=" {{ asset('image/' . $book->cover_image) }}" width="100px"></div>
             <div class="container">Title : {{ $book->title }}</div>
             <div class="container">Year : {{ $book->published_year }}</div>
-            <div class="container">Category : {{ $book->category }}</div>
+            <div class="container">Category : {{ $book->category->name }}</div>
             <div class="container">Status : {{ $book->status }}</div>
         </div>
 @endsection
