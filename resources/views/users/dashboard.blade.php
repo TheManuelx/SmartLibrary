@@ -39,7 +39,6 @@
         <div><h1>DashBoard</h1></div>
         <nav class="sidebar">
             <a href="{{ route('managebooks') }}">Manage Books</a>
-            <a href="{{ route('managecategories') }}">Manage Categories</a>
             <a href="{{ route('borroweditems') }}">Borrowed Items</a>
         </nav>
         <div class="dashboard-box">

@@ -15,41 +15,46 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-//General
+//GENERAL
 Route::get('/', function () { return view('welcome'); });
 Route::get('login', function() { return view('users.login'); })->name('login');
 Route::post('login', [UserController::class, 'loginValidate'])->name('validate');
 Route::get('profile', function() { return view('users.profile'); })->name('profile');
 
 
-//Book Management
-//Main
+//MAIN
 Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
 
-//Menu
+//MENU
+//MENU->Managebook
 Route::get('managebooks', [UserController::class, 'manageBooks'])->name('managebooks');
-Route::get('managecategories', function(){ return view('users.managecategories'); })->name('managecategories');
-Route::get('borroweditems', function(){ return view('users.borroweditems'); })->name('borroweditems');
+//MENU->Borrowing
+Route::get('borrowings/borroweditems', [UserController::class, 'manageBorrowings'])->name('borroweditems');
+//Borrowing->Create & Store
+Route::get('borrowings/create', [UserController::class, 'createBorrowing'])->name('borrowing.create');
+Route::post('borrowings/store', [UserController::class, 'storeBorrowing'])->name('borrowing.manage');
+//Borrowing->Update
+Route::put('borrowings/return/{id}', [UserController::class, 'returnBook'])->name('return.book');
+//Borrowing->Delete
+Route::delete('borrowing/delete/{id}', [UserController::class, 'destroyBorrowing'])->name('borrowings.destroy');
 
 //CRUD
-//Create
+//CRUD->Create
 Route::get('books/create', [UserController::class, 'create'])->name('books.create');
 Route::post('books/store', [UserController::class, 'store'])->name('books.store');
-
-//Read
+//CRUD->Read
 Route::get('books/detail/{id}', [UserController::class, 'show'])->name('detail');
-
-//Update
+//CRUD->Update
 Route::get('books/{id}/edit', [UserController::class, 'edit'])->name('edit');
 Route::put('books/{id}', [UserController::class, 'update'])->name('update');
-
-//Delete
+//CRUD->Delete
 Route::delete('books/delete/{id}', [UserController::class, 'destroy'])->name('delete');
 
-//Navbar
-//SearchBook
+//NAVBAR
+//NAVBAR->SearchBook
 Route::get('searchbook', [UserController::class, 'searchBook'])->name('searchbook');
-//SearchCategory
+//NAVBAR->SearchCategory
 Route::get('searchcategory', [UserController::class, 'searchCategory'])->name('searchcategory');
-//AddCategory
+//NAVBAR->AddCategory
 Route::post('books/addcategory', [UserController::class, 'addCategory'])->name('addcategory');
+

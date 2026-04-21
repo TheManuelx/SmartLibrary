@@ -19,8 +19,9 @@ class CreateBorrowingsTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('book_id')->constrained()->cascadeOnDelete();
 
-            $table->date('borrow_date');
-            $table->date('return_date')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->enum('status', ['available', 'borrowed'])->default('available');
             $table->timestamps();
         });
     }

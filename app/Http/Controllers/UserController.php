@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Book;
+use App\Models\Borrowing;
 use App\Models\Category;
 
 class UserController extends Controller
@@ -77,7 +78,7 @@ class UserController extends Controller
     public function show($id)
     {
         $book = Book::find($id);
-        return view('users.detail', compact('book'));
+        return view('books.detail', compact('book'));
     }
 
     /**
@@ -212,4 +213,75 @@ class UserController extends Controller
 
         return redirect()->back()->with('Success', 'Add Category Successfully');
     }
+
+    //Borrowing Table
+    //Read
+    public function manageBorrowings(Request $request) {
+        $query = Borrowing::with(['user', 'book']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            })->orWhereHas('book', function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%');
+            });
+        }
+        $borrowings = $query->get();
+        return view('borrowings.borroweditems', compact('borrowings'));
+    }
+
+    //Update
+    public function returnBook($id) {
+        $borrowing = Borrowing::findOrFail($id);
+        $borrowing->update(['status' => 'returned']);
+
+        $borrowing->book->update(['status' => 'available']);
+
+        return redirect()->back()->with('Success', 'Return The Book Successfully');
+    }
+
+    //Create
+    public function createBorrowing() {
+        $users = User::all();
+        $books = Book::where('status', 'available')->get();
+        return view('borrowings.create', compact('users', 'books'));
+    }
+
+    //Store
+    public function storeBorrowing(Request $request) {
+        $request->validate([
+            'user_id' => 'required',
+            'book_id' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        //Borrow History
+        Borrowing::create([
+            'user_id' => $request->user_id,
+            'book_id' => $request->book_id,
+            'borrow_date' => $request->start_date,
+            'return_date' => $request->end_date,
+            'status' => 'borrowed',
+        ]);
+
+        //Change Status to Borrowed
+        Book::where('id', $request->book_id)->update(['status' => 'borrowed']);
+
+        return redirect()->route('borroweditems')->with('Success', 'Borrowed Successfully');
+    }
+
+    public function destroyBorrowing($id) {
+        $borrowing = Borrowing::findOrFail($id);
+
+        if ($borrowing->status == 'borrowed'){
+            $borrowing->book->update(['status' => 'available']);
+        }
+
+        $borrowing->delete();
+        return redirect()->back()->with('Success', 'Borrowing Record Deleted');
+    }
+
+
 }
