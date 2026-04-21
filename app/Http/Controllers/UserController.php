@@ -36,7 +36,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('books.create');
+        $category = Category::all();
+        return view('books.create', compact('category'));
     }
 
     /**
@@ -49,9 +50,9 @@ class UserController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'published_year' => 'required|numeric',
             'category_id' => 'required',
             'status' => 'required',
+            'published_year' => 'required|numeric',
             'cover_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
@@ -60,9 +61,9 @@ class UserController extends Controller
 
         Book::create([
             'title' => $request->title,
-            'published_year' => $request->published_year,
             'category_id' => $request->category_id,
             'status' => $request->status,
+            'published_year' => $request->published_year,
             'cover_image' => $imageName,
         ]);
 
@@ -126,11 +127,9 @@ class UserController extends Controller
             $imageName = time() . '.' . $request->cover_image->extension();
             $request->cover_image->move(public_path('image'), $imageName);
             
-            // เพิ่มชื่อรูปใหม่เข้าไปในข้อมูลที่จะอัปเดต
             $updateData['cover_image'] = $imageName;
         }
 
-        // 3. อัปเดตข้อมูลทั้งหมด
         $book->update($updateData);
         
         return redirect()->route('managebooks')->with('success', 'Book Updated Successfully');

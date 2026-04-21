@@ -25,12 +25,10 @@
 
                         <div class="mb-3">
                             <label class="form-label">Category</label>
-                            <select name="category" class="form-select">
-                                <option value="Technology">Technology</option>
-                                <option value="Education">Education</option>
-                                <option value="Novel">Novel</option>
-                                <option value="Science">Science</option>
-                                <option value="History">History</option>
+                            <select name="category_id" class="form-select">
+                                @foreach($category as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
