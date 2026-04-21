@@ -40,6 +40,7 @@
         <nav class="sidebar">
             <a href="{{ route('managebooks') }}">Manage Books</a>
             <a href="{{ route('borroweditems') }}">Borrowed Items</a>
+            <a href="{{ route('users') }}">User List</a>
         </nav>
         <div class="dashboard-box">
             <p>

@@ -283,5 +283,42 @@ class UserController extends Controller
         return redirect()->back()->with('Success', 'Borrowing Record Deleted');
     }
 
+    // >--- USER ---<
+    public function viewUser() {
+        $users = User::all();
+        return view('users.profile', compact('users'));
+    }
+    //Edit User
+    public function editUser($id) {
+        $user = User::findOrFail($id);
+        return view('users.edituser', compact('user'));
+    }
+    //Update User
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'created_at' => 'required',
+        ]);
 
+        $user = User::findOrFail($id);
+
+        $updateData = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        // 3. อัปเดตข้อมูลทั้งหมด
+        $user->update($updateData);
+        
+        return redirect()->route('users')->with('Success', 'User Updated Successfully');
+    }
+    //Delete User
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        return redirect()->route('users')->with('Success', 'Delete a User Successfully');
+    }
 }
