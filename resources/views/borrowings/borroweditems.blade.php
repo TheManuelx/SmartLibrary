@@ -26,35 +26,49 @@
             <button type="submit" class="btn btn-outline-success">Search</button>
         </form>
     </div>
-    <table>
-        <tr><th>Borrower_Name</th><th>Title</th><th>Start_Date</th><th>End_Date</th><th>Status</th><th>Action</th></tr>
-        @foreach($borrowings as $item)
+    <table id="myTable">
+        <thead>
             <tr>
-                <td>{{ $item->user->name }}</td>
-                <td>{{ $item->book->title }}</td>
-                <td>{{ $item->borrow_date }}</td>
-                <td>{{ $item->return_date }}</td>
-                <td>
-                    <span class="badge {{ $item->status == 'borrowed' ? 'bg-warning' : 'bg-success' }}">
-                        {{ ucfirst($item->status) }}
-                    </span>
-                </td>
-                <td>
-                    @if($item->status == 'borrowed')
-                        <form action="{{ route('return.book', $item->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('PUT')
-                            <button class="btn btn-sm btn-success">Return Book</button>
-                        </form>
-                    @endif
-                    <form action="{{ route('borrowings.destroy', $item->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
+                <th>Borrower_Name</th><th>Title</th><th>Start_Date</th><th>End_Date</th><th>Status</th><th>Action</th>
             </tr>
-        @endforeach
+        </thead>
+        <tbody>
+            @foreach($borrowings as $item)
+                <tr>
+                    <td>{{ $item->user->name }}</td>
+                    <td>{{ $item->book->title }}</td>
+                    <td>{{ $item->borrow_date }}</td>
+                    <td>{{ $item->return_date }}</td>
+                    <td>
+                        <span class="badge {{ $item->status == 'borrowed' ? 'bg-warning' : 'bg-success' }}">
+                            {{ ucfirst($item->status) }}
+                        </span>
+                    </td>
+                    <td>
+                        @if($item->status == 'borrowed')
+                            <form action="{{ route('return.book', $item->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('PUT')
+                                <button class="btn btn-sm btn-success">Return Book</button>
+                            </form>
+                        @endif
+                        <form action="{{ route('borrowings.destroy', $item->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 </div>
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // เรียกใช้งาน DataTables ผ่าน ID ของตาราง
+            $('#myTable').DataTable();
+        });
+    </script>
+@endsection
 @endsection

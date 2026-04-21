@@ -35,7 +35,6 @@
                                 <a class="dropdown-item" href="{{ route('searchcategory', ['category' => $cat->name]) }}">{{ $cat->name }}</a>
                             </li>
                         @endforeach
-                        
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('searchcategory', ['category' => 'All']) }}">All</a></li>
                     </ul>

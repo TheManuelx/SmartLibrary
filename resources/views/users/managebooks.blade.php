@@ -31,27 +31,41 @@
 @section('content')
         <div class="table-container">
             <h1>Manage Books</h1>
-            <table>
-                <tr><th>Cover_Image</th><th>Title</th><th>Published_Year</th><th>Category</th><th>Status</th><th>Details</th><th>Edit</th><th>Delete</th></tr>
-                @foreach($books as $book)
+            <table id="myTable">
+                <thead>
                     <tr>
-                        <td><img src="{{ asset('image/' . $book->cover_image) }}" width="50"></td>
-                        <td>{{ $book->title }}</td>
-                        <td>{{ $book->published_year }}</td>
-                        <td>{{ $book->category->name }}</td>
-                        <td>{{ $book->status }}</td>
-                        <td><a href="{{ route('detail', $book->id) }}">Detail</a></td>
-                        <td><a href="{{ route('edit', $book->id) }}">Edit</a></td>
-                        <td>
-                            <form action="{{ route('delete', $book->id) }}" method="POST" onsubmit="return confirm('Confirming to Delete?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <th>Cover_Image</th><th>Title</th><th>Published_Year</th><th>Category</th><th>Status</th><th>Details</th><th>Edit</th><th>Delete</th>
                     </tr>
-                @endforeach
+                </thead>
+                <tbody>
+                    @foreach($books as $book)
+                        <tr>
+                            <td><img src="{{ asset('image/' . $book->cover_image) }}" width="50"></td>
+                            <td>{{ $book->title }}</td>
+                            <td>{{ $book->published_year }}</td>
+                            <td>{{ $book->category->name }}</td>
+                            <td>{{ $book->status }}</td>
+                            <td><a href="{{ route('detail', $book->id) }}">Detail</a></td>
+                            <td><a href="{{ route('edit', $book->id) }}">Edit</a></td>
+                            <td>
+                                <form action="{{ route('delete', $book->id) }}" method="POST" onsubmit="return confirm('Confirming to Delete?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                
             </table>
         </div>
-
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // เรียกใช้งาน DataTables ผ่าน ID ของตาราง
+            $('#myTable').DataTable();
+        });
+    </script>
+@endsection
 @endsection

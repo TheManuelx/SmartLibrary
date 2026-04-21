@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('style')
+<link rel="stylesheet" href="https://datatables.net" />
 <style>
     .table-container {
         display: flex;
@@ -31,9 +32,14 @@
 @section('content')
 <div class="table-container">
     <h1>Manage Books</h1>
-    <table>
-        <tr><th>Cover_Image</th><th>Title</th><th>Published_Year</th><th>Category</th><th>Status</th><th>Details</th><th>Edit</th><th>Delete</th></tr>
-        @foreach($book as $book)
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>Cover_Image</th><th>Title</th><th>Published_Year</th><th>Category</th><th>Status</th><th>Details</th><th>Edit</th><th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($book as $book)
             <tr>
                 <td><img src="{{ asset('image/' . $book->cover_image) }}" width="50"></td>
                 <td>{{ $book->title }}</td>
@@ -51,6 +57,15 @@
                 </td>
             </tr>
         @endforeach
+        </tbody>
     </table>
 </div>
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // เรียกใช้งาน DataTables ผ่าน ID ของตาราง
+            $('#myTable').DataTable();
+        });
+    </script>
+@endsection
 @endsection
